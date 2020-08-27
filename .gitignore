@@ -1,4 +1,3 @@
 .vscode
-production_schedule.xlsx
-diagramnum.xlsx
+*.xlsx*
 draft_plan.png

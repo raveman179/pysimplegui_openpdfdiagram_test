@@ -10,65 +10,19 @@
     存在しないなら
         "受注No.が存在しません"とかエラーを返す。
 4.図面フォルダのパス内から prod_name + '.pdf'と合致するファイルを開く。
+    変換テーブルを検索して図面が存在するなら
+        Popenで図面を開く
+    何らかの理由(横型以外の品名等)で図面がフォルダ内に存在しない場合
+        "図面ファイルが存在しません"エラーを返す。
 """
 
+from planningsheet_parse import sheet_search
 import PySimpleGUI as sg
-import openpyxl
 from os.path import basename
 import subprocess
 import re
 
-def get_prodname(order_num):
-    """
-    受注No.検索処理
-
-    xlsx形式の生産計画シートを開いて品名を返す
-    
-    args: Fs受注No.(品質経歴書バーコード⑨)
-    return: 該当受注No.の品目名
-    """
-    wb = openpyxl.load_workbook('./production_schedule.xlsx')
-    sheet = wb.active 
-
-    prod_sheet = wb['Sheet1']
-    prod_name = ""
-
-    for row in prod_sheet.iter_rows(min_row=2):
-        if order_num == row[0].value:
-            row1 = row[1].value
-            prod_name = re.sub(r'\s.*ΩJ', '', row1)
-            sheet[row[7].coordinate] = "作業済み"
-            break
-
-    wb.save('production_schedule.xlsx')
-
-    return prod_name
-
-def get_diagram_num(prod_name):
-    """
-    図面ファイル検索処理
-
-    変換テーブルから図面のファイル名を取得する
-
-    args: get_prodname()で取得した製品名
-    return: 開こうとするPDF図面の絶対パス
-    """
-    # ------図面フォルダのパス
-    diagram_dir_path = "図面の入っているフォルダ名"
-
-    # ------変換テーブルで取得した図面No.
-    diagram_filename = ""
-
-    wb = openpyxl.load_workbook('./diagramnum.xlsx')
-
-    sheet = wb['Sheet1']
-    for row in sheet.iter_rows(min_row=2):
-        if prod_name == row[0].value:
-            diagram_filename = row[1].value
-    
-    pdf_abs_path = diagram_dir_path + diagram_filename
-
-    return pdf_abs_path
+sheetsearch = sheet_search()
 
 sg.theme('Dark Green 1')
 
@@ -83,17 +37,19 @@ while True:
     event, values = window.read()
     print('イベント:', event ,', 値:',values) # 確認表示
     
-    prod_name = get_prodname(values['order_num'])
+    prod_name = sheetsearch.get_prodname(values['order_num'])
 
-    # 生産計画シート内に読み込んだFS受注No.が存在しない
-    
-    if prod_name == '':    
+    # 生産計画シート内に読み込んだFS受注No.が存在しない場合、
+    # ウィンドウを閉じる
+    if prod_name == "n/a":    
         sg.Popup('受注No.が存在しません')
-        #閉じるときに一回開く。意図しない動作なので修正。
-        
-    pdf_abs_path = get_diagram_num(prod_name)
-    
-    # 図面のフルパスを投げてpopen関数で図面ファイルを開く
+        break
+
+    pdf_abs_path = sheetsearch.get_diagram_num(prod_name)
+    if pdf_abs_path == "n/a":    
+        sg.Popup('該当するPDF図面ファイルが存在しません')
+        break
+
     if event == 'open_diagram':
         subprocess.Popen(['start', pdf_abs_path], shell=True)
 
