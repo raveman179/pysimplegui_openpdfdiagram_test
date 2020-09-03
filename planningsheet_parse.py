@@ -19,11 +19,13 @@
 
 import openpyxl
 import re
+import os
 
 class sheet_search:
     def __init__(self):
         # ------図面フォルダのパス
-        self.diagram_dir_path = "C:/Users/製造1課 組込/Desktop/S4_組込(C20)"
+        self.diagram_dir_path = os.path.join(os.path.join(os.environ["USERPROFILE"]), 'Desktop') + "S4_組込(C20)"
+        # self.diagram_dir_path = "C:/Users/製造1課 組込/Desktop/S4_組込(C20)"
 
         # ------生産計画表のファイル名
         self.production_schedule = './production_schedule.xlsx'
