@@ -10,6 +10,9 @@ import re
 
 sheetsearch = sheet_search()
 
+# ------pdfビュワーのパス
+pdf_viwer_path = r"C:\Program Files (x86)\Adobe\Acrobat Reader DC\Reader\AcroRd32.exe"
+
 sg.theme('Dark Green 1')
 
 layout = [
@@ -37,7 +40,7 @@ while True:
         break
 
     if event == 'open_diagram':
-        subprocess.Popen(['start', pdf_abs_path], shell=True)
+        subprocess.Popen([pdf_viwer_path, pdf_abs_path], shell=True)
 
     if event == sg.WIN_CLOSED or event == 'Quit':
         break

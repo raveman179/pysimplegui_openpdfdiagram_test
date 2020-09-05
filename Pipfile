@@ -8,6 +8,7 @@ verify_ssl = true
 [packages]
 pysimplegui = "*"
 openpyxl = "*"
+pyinstaller = "*"
 
 [requires]
-python_version = "2.7"
+python_version = "3.8.5"

@@ -24,14 +24,14 @@ import os
 class sheet_search:
     def __init__(self):
         # ------図面フォルダのパス
-        self.diagram_dir_path = os.path.join(os.path.join(os.environ["USERPROFILE"]), 'Desktop') + "S4_組込(C20)"
+        self.diagram_dir_path = os.path.join(os.path.join(os.environ["USERPROFILE"]), 'Desktop\\') + "S4_組込(C20)"
         # self.diagram_dir_path = "C:/Users/製造1課 組込/Desktop/S4_組込(C20)"
-
+         
         # ------生産計画表のファイル名
-        self.production_schedule = './production_schedule.xlsx'
+        self.production_schedule = 'production_schedule.xlsx'
 
         # ------品名<-->PDF図面ファイル変換テーブルのファイル名
-        self.diagram_num = './diagramnum.xlsx'
+        self.diagram_num = 'diagramnum.xlsx'
 
         # ------変換テーブルで取得した図面No.
         self.diagram_filename = ''
@@ -84,11 +84,13 @@ class sheet_search:
         for row in sheet.iter_rows(min_row=2):
             if prod_name == row[0].value:
                 self.diagram_filename = row[1].value
-            else:
-                self.diagram_filename = "n/a"
-                return self.diagram_filename
+                break
+        else:
+            self.diagram_filename = "n/a"
+            return self.diagram_filename
 
-        pdf_abs_path = self.diagram_dir_path + '/' + self.diagram_filename
+        pdf_abs_path = self.diagram_dir_path + '\\' + self.diagram_filename
+        # pdf_abs_path = self.diagram_dir_path + self.diagram_filename
 
         return pdf_abs_path
 
@@ -96,8 +98,8 @@ class sheet_search:
 if __name__ == "__main__":
     sheetsearch = sheet_search()
     
-    prod_name = sheetsearch.get_prodname('00')
-    print(prod_name)
+    prod_name = 'CAW400-B783'
+    # print(prod_name)
 
     abs_path = sheetsearch.get_diagram_num(prod_name)
-    # print(abs_path)
+    print(abs_path)
