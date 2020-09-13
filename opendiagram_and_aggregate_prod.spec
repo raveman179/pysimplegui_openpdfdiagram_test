@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['opendiagram_and_aggregate_prod.py'],
-             pathex=['C:\\Users\\yoshimasa sugawara\\Desktop\\pysimplegui_openpdfdiagram_test'],
+             pathex=['C:\\Users\\yoshimasa sugawara\\Desktop\\openPDFdiagram'],
              binaries=[],
              datas=[],
              hiddenimports=[],
@@ -30,4 +30,4 @@ exe = EXE(pyz,
           upx=True,
           upx_exclude=[],
           runtime_tmpdir=None,
-          console=True )
+          console=False )
