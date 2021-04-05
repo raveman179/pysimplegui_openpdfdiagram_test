@@ -1,3 +1,6 @@
 .vscode
 *.xlsx*
 draft_plan.png
+manual
+ファイルオープンテスト用テンプレ.ods
+test_program.py
